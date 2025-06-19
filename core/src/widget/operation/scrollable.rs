@@ -125,7 +125,7 @@ pub fn scroll_by<T>(target: Id, offset: AbsoluteOffset) -> impl Operation<T> {
 }
 
 /// The amount of absolute offset in each direction of a [`Scrollable`].
-/// 
+///
 /// A value of `None` indicates the direction offset position is preserved.
 #[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub struct AbsoluteOffset {
@@ -138,7 +138,7 @@ pub struct AbsoluteOffset {
 /// The amount of relative offset in each direction of a [`Scrollable`].
 ///
 /// A value of `0.0` means start, while `1.0` means end.
-/// 
+///
 /// A value of `None` indicates the direction offset position is preserved.
 #[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub struct RelativeOffset {
@@ -150,8 +150,14 @@ pub struct RelativeOffset {
 
 impl RelativeOffset {
     /// A relative offset that points to the top-left of a [`Scrollable`].
-    pub const START: Self = Self { x: Some(0.0), y: Some(0.0) };
+    pub const START: Self = Self {
+        x: Some(0.0),
+        y: Some(0.0),
+    };
 
     /// A relative offset that points to the bottom-right of a [`Scrollable`].
-    pub const END: Self = Self { x: Some(1.0), y: Some(1.0) };
+    pub const END: Self = Self {
+        x: Some(1.0),
+        y: Some(1.0),
+    };
 }

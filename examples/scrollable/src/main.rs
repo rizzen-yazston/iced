@@ -305,7 +305,8 @@ impl ScrollableDemo {
 
         let progress_bars: Element<Message> = match self.scrollable_direction {
             Direction::Vertical => {
-                progress_bar(0.0..=1.0, self.current_scroll_offset.y.unwrap()).into()
+                progress_bar(0.0..=1.0, self.current_scroll_offset.y.unwrap())
+                    .into()
             }
             Direction::Horizontal => {
                 progress_bar(0.0..=1.0, self.current_scroll_offset.x.unwrap())

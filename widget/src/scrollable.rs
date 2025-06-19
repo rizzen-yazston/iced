@@ -1375,10 +1375,22 @@ fn notify_viewport<Message>(
 
         if last_notified.bounds == bounds
             && last_notified.content_bounds == content_bounds
-            && unchanged(last_relative_offset.x.unwrap(), current_relative_offset.x.unwrap())
-            && unchanged(last_relative_offset.y.unwrap(), current_relative_offset.y.unwrap())
-            && unchanged(last_absolute_offset.x.unwrap(), current_absolute_offset.x.unwrap())
-            && unchanged(last_absolute_offset.y.unwrap(), current_absolute_offset.y.unwrap())
+            && unchanged(
+                last_relative_offset.x.unwrap(),
+                current_relative_offset.x.unwrap(),
+            )
+            && unchanged(
+                last_relative_offset.y.unwrap(),
+                current_relative_offset.y.unwrap(),
+            )
+            && unchanged(
+                last_absolute_offset.x.unwrap(),
+                current_absolute_offset.x.unwrap(),
+            )
+            && unchanged(
+                last_absolute_offset.y.unwrap(),
+                current_absolute_offset.y.unwrap(),
+            )
         {
             return false;
         }
@@ -1493,7 +1505,10 @@ impl Viewport {
             .offset_y
             .absolute(self.bounds.height, self.content_bounds.height);
 
-        AbsoluteOffset { x: Some(x), y: Some(y) }
+        AbsoluteOffset {
+            x: Some(x),
+            y: Some(y),
+        }
     }
 
     /// Returns the [`AbsoluteOffset`] of the current [`Viewport`], but with its
@@ -1505,8 +1520,14 @@ impl Viewport {
         let AbsoluteOffset { x, y } = self.absolute_offset();
 
         AbsoluteOffset {
-            x: Some((self.content_bounds.width - self.bounds.width).max(0.0) - x.unwrap()),
-            y: Some((self.content_bounds.height - self.bounds.height).max(0.0) - y.unwrap()),
+            x: Some(
+                (self.content_bounds.width - self.bounds.width).max(0.0)
+                    - x.unwrap(),
+            ),
+            y: Some(
+                (self.content_bounds.height - self.bounds.height).max(0.0)
+                    - y.unwrap(),
+            ),
         }
     }
 
@@ -1517,7 +1538,10 @@ impl Viewport {
         let x = x.unwrap() / (self.content_bounds.width - self.bounds.width);
         let y = y.unwrap() / (self.content_bounds.height - self.bounds.height);
 
-        RelativeOffset { x: Some(x), y: Some(y) }
+        RelativeOffset {
+            x: Some(x),
+            y: Some(y),
+        }
     }
 
     /// Returns the bounds of the current [`Viewport`].
@@ -1620,7 +1644,11 @@ impl State {
         content_bounds: Rectangle,
     ) {
         let AbsoluteOffset { x, y } = offset;
-        self.scroll(Vector::new(x.unwrap_or(0.0), y.unwrap_or(0.0)), bounds, content_bounds);
+        self.scroll(
+            Vector::new(x.unwrap_or(0.0), y.unwrap_or(0.0)),
+            bounds,
+            content_bounds,
+        );
     }
 
     /// Unsnaps the current scroll position, if snapped, given the bounds of the
