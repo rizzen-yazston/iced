@@ -409,8 +409,8 @@ where
         vec![Tree::new(&self.content)]
     }
 
-    fn diff(&self, tree: &mut Tree) {
-        tree.diff_children(std::slice::from_ref(&self.content));
+    fn diff(&mut self, tree: &mut Tree) {
+        tree.diff_children(std::slice::from_mut(&mut self.content));
     }
 
     fn size(&self) -> Size<Length> {
@@ -421,7 +421,7 @@ where
     }
 
     fn layout(
-        &self,
+        &mut self,
         tree: &mut Tree,
         renderer: &Renderer,
         limits: &layout::Limits,
@@ -438,7 +438,7 @@ where
                 },
                 |limits| {
                     let child_limits = layout::Limits::new(
-                        Size::new(limits.min().width, limits.min().height),
+                        limits.min(),
                         Size::new(
                             if self.direction.horizontal().is_some() {
                                 f32::INFINITY
@@ -453,7 +453,7 @@ where
                         ),
                     );
 
-                    self.content.as_widget().layout(
+                    self.content.as_widget_mut().layout(
                         &mut tree.children[0],
                         renderer,
                         &child_limits,
@@ -527,7 +527,7 @@ where
     }
 
     fn operate(
-        &self,
+        &mut self,
         tree: &mut Tree,
         layout: Layout<'_>,
         renderer: &Renderer,
@@ -553,7 +553,7 @@ where
             self.id.as_ref().map(|id| &id.0),
             bounds,
             &mut |operation| {
-                self.content.as_widget().operate(
+                self.content.as_widget_mut().operate(
                     &mut tree.children[0],
                     layout.children().next().unwrap(),
                     renderer,
@@ -798,12 +798,11 @@ where
                     },
                 );
 
-                if !had_input_method {
-                    if let InputMethod::Enabled { position, .. } =
+                if !had_input_method
+                    && let InputMethod::Enabled { position, .. } =
                         shell.input_method_mut()
-                    {
-                        *position = *position - translation;
-                    }
+                {
+                    *position = *position - translation;
                 }
             };
 
@@ -1091,23 +1090,22 @@ where
                         );
                     }
 
-                    if let Some(scroller) = scrollbar.scroller {
-                        if scroller.bounds.width > 0.0
-                            && scroller.bounds.height > 0.0
-                            && (style.scroller.color != Color::TRANSPARENT
-                                || (style.scroller.border.color
-                                    != Color::TRANSPARENT
-                                    && style.scroller.border.width > 0.0))
-                        {
-                            renderer.fill_quad(
-                                renderer::Quad {
-                                    bounds: scroller.bounds,
-                                    border: style.scroller.border,
-                                    ..renderer::Quad::default()
-                                },
-                                style.scroller.color,
-                            );
-                        }
+                    if let Some(scroller) = scrollbar.scroller
+                        && scroller.bounds.width > 0.0
+                        && scroller.bounds.height > 0.0
+                        && (style.scroller.color != Color::TRANSPARENT
+                            || (style.scroller.border.color
+                                != Color::TRANSPARENT
+                                && style.scroller.border.width > 0.0))
+                    {
+                        renderer.fill_quad(
+                            renderer::Quad {
+                                bounds: scroller.bounds,
+                                border: style.scroller.border,
+                                ..renderer::Quad::default()
+                            },
+                            style.scroller.color,
+                        );
                     }
                 };
 
@@ -2108,7 +2106,7 @@ pub fn default(theme: &Theme, status: Status) -> Style {
         background: Some(palette.background.weak.color.into()),
         border: border::rounded(2),
         scroller: Scroller {
-            color: palette.background.strong.color,
+            color: palette.background.strongest.color,
             border: border::rounded(2),
         },
     };

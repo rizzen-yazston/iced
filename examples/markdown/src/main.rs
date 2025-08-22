@@ -6,7 +6,7 @@ use iced::highlighter;
 use iced::time::{self, Instant, milliseconds};
 use iced::widget::{
     self, button, center_x, container, horizontal_space, hover, image,
-    markdown, pop, right, row, scrollable, text_editor, toggler,
+    markdown, right, row, scrollable, sensor, text_editor, toggler,
 };
 use iced::window;
 use iced::{
@@ -174,7 +174,7 @@ impl Markdown {
         }
     }
 
-    fn view(&self) -> Element<Message> {
+    fn view(&self) -> Element<'_, Message> {
         let editor = text_editor(&self.raw)
             .placeholder("Type your Markdown here...")
             .on_action(Message::Edit)
@@ -267,7 +267,7 @@ impl<'a> markdown::Viewer<'a, Message> for CustomViewer<'a> {
             )
             .into()
         } else {
-            pop(horizontal_space())
+            sensor(horizontal_space())
                 .key_ref(url.as_str())
                 .delay(milliseconds(500))
                 .on_show(|_size| Message::ImageShown(url.clone()))

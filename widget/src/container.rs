@@ -247,8 +247,8 @@ where
         self.content.as_widget().children()
     }
 
-    fn diff(&self, tree: &mut Tree) {
-        self.content.as_widget().diff(tree);
+    fn diff(&mut self, tree: &mut Tree) {
+        self.content.as_widget_mut().diff(tree);
     }
 
     fn size(&self) -> Size<Length> {
@@ -259,7 +259,7 @@ where
     }
 
     fn layout(
-        &self,
+        &mut self,
         tree: &mut Tree,
         renderer: &Renderer,
         limits: &layout::Limits,
@@ -273,12 +273,14 @@ where
             self.padding,
             self.horizontal_alignment,
             self.vertical_alignment,
-            |limits| self.content.as_widget().layout(tree, renderer, limits),
+            |limits| {
+                self.content.as_widget_mut().layout(tree, renderer, limits)
+            },
         )
     }
 
     fn operate(
-        &self,
+        &mut self,
         tree: &mut Tree,
         layout: Layout<'_>,
         renderer: &Renderer,
@@ -288,7 +290,7 @@ where
             self.id.as_ref().map(|id| &id.0),
             layout.bounds(),
             &mut |operation| {
-                self.content.as_widget().operate(
+                self.content.as_widget_mut().operate(
                     tree,
                     layout.children().next().unwrap(),
                     renderer,
@@ -400,9 +402,9 @@ where
     Renderer: core::Renderer + 'a,
 {
     fn from(
-        column: Container<'a, Message, Theme, Renderer>,
+        container: Container<'a, Message, Theme, Renderer>,
     ) -> Element<'a, Message, Theme, Renderer> {
-        Element::new(column)
+        Element::new(container)
     }
 }
 
@@ -712,7 +714,7 @@ pub fn bordered_box(theme: &Theme) -> Style {
         border: Border {
             width: 1.0,
             radius: 5.0.into(),
-            color: palette.background.strong.color,
+            color: palette.background.weak.color,
         },
         ..Style::default()
     }
