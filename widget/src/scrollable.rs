@@ -1615,22 +1615,22 @@ impl State {
     /// Snaps the scroll position to a [`RelativeOffset`].
     pub fn snap_to(&mut self, offset: RelativeOffset) {
         let RelativeOffset { x, y } = offset;
-        if x.is_some() {
-            self.offset_x = Offset::Relative(x.unwrap().clamp(0.0, 1.0));
+        if let Some(x) = x {
+            self.offset_x = Offset::Relative(x.clamp(0.0, 1.0));
         }
-        if x.is_some() {
-            self.offset_y = Offset::Relative(y.unwrap().clamp(0.0, 1.0));
+        if let Some(y) = y {
+            self.offset_y = Offset::Relative(y.clamp(0.0, 1.0));
         }
     }
 
     /// Scroll to the provided [`AbsoluteOffset`].
     pub fn scroll_to(&mut self, offset: AbsoluteOffset) {
         let AbsoluteOffset { x, y } = offset;
-        if x.is_some() {
-            self.offset_x = Offset::Absolute(x.unwrap().max(0.0));
+        if let Some(x) = x {
+            self.offset_x = Offset::Absolute(x.max(0.0));
         }
-        if y.is_some() {
-            self.offset_y = Offset::Absolute(y.unwrap().max(0.0));
+        if let Some(y) = y {
+            self.offset_y = Offset::Absolute(y.max(0.0));
         }
     }
 
